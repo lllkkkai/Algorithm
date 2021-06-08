@@ -4,7 +4,7 @@
 
 挑了一些值得反复做的题，硬做没什么算法思想的就不囊括了
 
-### JZ3、从尾到头打印单链表
+## JZ3、从尾到头打印单链表
 
 输入一个链表，按链表从尾到头的顺序返回一个ArrayList
 
@@ -86,7 +86,7 @@ public class Solution {
 }
 ```
 
-### JZ4、重建二叉树
+## JZ4、重建二叉树
 
 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
 
@@ -149,7 +149,7 @@ public class Solution {
 }
 ```
 
-### JZ6、旋转数组的最小数字
+## JZ6、旋转数组的最小数字
 
 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
 输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。
@@ -190,7 +190,7 @@ public int minNumberInRotateArray(int[] array) {
    }`
 ```
 
-### JZ8、跳台阶
+## JZ8、跳台阶
 
 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
 
@@ -240,7 +240,7 @@ public class Solution {
 }
 ```
 
-### JZ9、变态跳台阶
+## JZ9、变态跳台阶（Not）
 
 一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
 
@@ -254,7 +254,7 @@ public class Solution {
 
 1、暴力法
 
-### JZ10、矩形覆盖
+## JZ10、矩形覆盖
 
 我们可以用2×1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2×1的小矩形无重叠地覆盖一个2×n的大矩形，从同一个方向看总共有多少种不同的方法？
 
@@ -310,6 +310,189 @@ public class Solution {
             pre2 = res;
         }
         return res;
+    }
+}
+```
+
+## JZ14、链表中倒数第k个结点
+
+输入一个链表，输出该链表中倒数第k个结点。如果该链表长度小于k，请返回空。
+
+**示例：**
+
+>输入：{1，2，3，4，5}，1
+>
+>返回值：{5}
+
+**题解：**
+
+1、双指针法
+
+fast指针在前先走k位，slow指针随后从头开始同时前行，直到fast指向null为止
+
+```Java
+public ListNode FindKthToTail (ListNode pHead, int k) {
+        // write code here
+        ListNode fast = pHead;
+        for(int i=0; i<k; i++){
+            if(fast == null) return fast;
+            fast = fast.next;
+        }
+        ListNode slow = pHead;
+        while(fasr!=null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+}
+```
+
+2、栈方法
+
+过于麻烦，不写了，知道思想就可以
+
+3、递归法
+
+浅显易懂，递到尾指针然后开始size自增，==k时返回该节点，即可
+
+```Java
+int size;
+ 
+public ListNode FindKthToTail(ListNode pHead, int k) {
+    if (pHead == null)
+        return pHead;
+    ListNode node = FindKthToTail(pHead.next, k);
+    if (++size == k)
+        return pHead;
+    return node;
+}
+```
+
+## JZ15、反转链表（Not）
+
+输入一个链表，反转链表后，输出新链表的表头。
+
+**示例：**
+
+>输入：{1，2，3}
+>
+>返回值：{3，2，1}
+
+**题解：**
+
+1、栈方法
+
+链表全部节点进栈，再重新出栈组成一个新链表
+
+```Java
+import java.util.Stack;
+public class Solution {
+    public ListNode ReverseList(ListNode head) {
+        Stack<ListNode> stack = new Stack<>();
+        //把链表节点全部摘掉放到栈中
+        while (head != null) {
+            stack.push(head);
+            head = head.next;
+        }
+        if (stack.isEmpty())
+            return null;
+        ListNode node = stack.pop();
+        ListNode dummy = node;
+        //栈中的结点全部出栈，然后重新连成一个新的链表
+        while (!stack.isEmpty()) {
+            ListNode tempNode = stack.pop();
+            node.next = tempNode;
+            node = node.next;
+        }
+        //最后一个结点就是反转前的头结点，一定要让他的next
+        //等于空，否则会构成环
+        node.next = null;
+        return dummy;
+    }
+}
+```
+
+2、双链表法
+
+将旧链表的节点一个一个摘除即可
+
+```Java
+public ListNode ReverseList(ListNode head) {
+    //新链表
+    ListNode newHead = null;
+    while (head != null) {
+        //先保存访问的节点的下一个节点，保存起来
+        //留着下一步访问的
+        ListNode temp = head.next;
+        //每次访问的原链表节点都会成为新链表的头结点，
+        //其实就是把新链表挂到访问的原链表节点的
+        //后面就行了
+        head.next = newHead;
+        //更新新链表
+        newHead = head;
+        //重新赋值，继续访问
+        head = temp;
+    }
+    //返回新链表
+    return newHead;
+}
+```
+
+3、递归法
+
+## JZ17、树的子结构
+
+输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）
+
+**示例：**
+
+>输入：{8,8,#,9,#,2,#,5}，{8,9,#,2}
+>
+>返回值：true
+
+**题解：**
+
+1、递归法
+
+大部分树的题目都可以用递归法求解，从root1的根节点开始遍历，判断与root2的根节点是否相等，相等则进入IfSame，否则，递归遍历root1的左右子树
+
+IfSame有三种情况，1.root1为空，root2不为空，返回false；2.root2为空，返回true；3.root1与root2值不相等，返回false；
+
+```Java
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}
+*/
+public class Solution {
+    public boolean HasSubtree(TreeNode root1,TreeNode root2) {
+        boolean res = false;
+        if(root1 == null || root2 == null)
+            return res;
+        if(root1.val == root2.val){
+            res = IfSame(root1,root2);
+        }
+        if(!res)
+            res = HasSubtree(root1.left,root2);
+        if(!res)
+            res = HasSubtree(root1.right,root2);
+        return res;
+    }
+    private boolean IfSame(TreeNode root1, TreeNode root2){
+        if(root1 == null && root2 != null)
+            return false;
+        if(root2 == null)
+            return true;
+        if(root1.val != root2.val)
+            return false;
+        return IfSame(root1.left,root2.left)&&IfSame(root1.right,root2.right);
     }
 }
 ```
