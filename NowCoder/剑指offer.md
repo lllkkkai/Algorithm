@@ -357,16 +357,7 @@ public ListNode FindKthToTail (ListNode pHead, int k) {
 浅显易懂，递到尾指针然后开始size自增，==k时返回该节点，即可
 
 ```Java
-int size;
- 
-public ListNode FindKthToTail(ListNode pHead, int k) {
-    if (pHead == null)
-        return pHead;
-    ListNode node = FindKthToTail(pHead.next, k);
-    if (++size == k)
-        return pHead;
-    return node;
-}
+int size; public ListNode FindKthToTail(ListNode pHead, int k) {    if (pHead == null)        return pHead;    ListNode node = FindKthToTail(pHead.next, k);    if (++size == k)        return pHead;    return node;}
 ```
 
 ## JZ15、反转链表（Not）
@@ -493,6 +484,163 @@ public class Solution {
         if(root1.val != root2.val)
             return false;
         return IfSame(root1.left,root2.left)&&IfSame(root1.right,root2.right);
+    }
+}
+```
+
+## JZ18、二叉树的镜像
+
+此题为成电21年考研真题
+
+操作给定的二叉树，将其变换为源二叉树的镜像。
+
+> 比如：源二叉树 
+>             8
+>            /  \
+>           6   10
+>          / \  / \
+>         5  7 9 11
+>         镜像二叉树
+>             8
+>            /  \
+>           10   6
+>          / \  / \
+>         11 9 7  5
+
+**示例：**
+
+> 输入：{8,6,10,5,7,9,11}
+>
+> 返回值：{8,10,6,11,9,7,5}
+
+**题解：**
+
+典型的递归法，递归反转**当前**节点的左右子树（从叶子到根节点）
+
+```Java
+import java.util.*;
+/*
+ * public class TreeNode {
+ *   int val = 0;
+ *   TreeNode left = null;
+ *   TreeNode right = null;
+ *   public TreeNode(int val) {
+ *     this.val = val;
+ *   }
+ * }
+ */
+public class Solution {
+    /**
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     * @param pRoot TreeNode类 
+     * @return TreeNode类
+     */
+    public TreeNode Mirror (TreeNode pRoot) {
+        // write code here
+        if(pRoot == null)
+            return null;
+        pRoot.left = Mirror(pRoot.left);
+        pRoot.right = Mirror(pRoot.right);
+        TreeNode temp = new TreeNode(-1);
+        temp = pRoot.left;
+        pRoot.left = pRoot.right;
+        pRoot.right = temp;
+        return pRoot;
+    }
+}
+```
+
+## JZ21、栈的压入、弹出序列
+
+输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
+
+**示例：**
+
+> 输入：[1,2,3,4,5],[4,3,5,1,2]
+>
+> 返回值：false
+
+**题解：**
+
+栈的经典运用，输入序列每次入栈后比较栈顶元素是否与压出顺序当前索引元素相等，相等则出栈
+
+具体过程：1入栈，1！=4，2入栈，2！=4，3入栈，3！=4，4入栈，4==4，4出栈，5入栈，5==5，5出栈...
+
+```Java
+import java.util.ArrayList;
+import java.util.Stack;
+public class Solution {
+    public boolean IsPopOrder(int [] pushA,int [] popA) {
+        if(pushA.length == 0 || popA.length ==0)
+            return false;
+        Stack<Integer> s = new Stack<>();
+        int index=0;
+        for(int i = 0; i<pushA.length; i++){
+            s.push(pushA[i]);
+            while(!s.empty() && s.peek() == popA[index]){
+                s.pop();
+                index++;
+            }
+        }
+        return s.empty();
+    }
+}
+```
+
+## JZ22、从上往下打印二叉树（层序遍历）
+
+从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+
+**示例：**
+
+> 输入：{5,4,#,3,#,2,#,1}
+>
+> 返回值：{5,4,3,2,1}
+
+**题解**：
+
+1、队列求解
+
+new一个queue，根节点入队，每一个结点出队后，left先入，然后right再入
+
+```Java
+import java.util.ArrayList;
+import java.util.LinkedList;
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    public ArrayList<Integer> PrintFromTopToBottom(TreeNode root) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        if(root == null)
+            return res;
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+        TreeNode current = null;
+        queue.offer(root);//将根节点入队
+        while(!queue.isEmpty())
+        {
+            current = queue.poll();//出队队头元素并访问
+            res.add(current.val);
+            if(current.left != null)//如果当前节点的左节点不为空入队
+            {
+                queue.offer(current.left);
+            }
+            if(current.right != null)//如果当前节点的右节点不为空，把右节点入队
+            {
+                queue.offer(current.right);
+            }
+        }
+        return res;
     }
 }
 ```
