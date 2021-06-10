@@ -645,3 +645,133 @@ public class Solution {
 }
 ```
 
+## JZ27、字符串的排列（还有方法）
+
+
+输入一个字符串，按字典序打印出该字符串中字符的所有排列。例如输入字符串abc，则按字典序打印出由字符ab,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+
+**输入描述：**
+
+输入一个字符串,长度不超过9(可能有字符重复),字符只包括大小写字母。
+
+**示例**：
+
+> 输入："ab"
+>
+> 返回值：["ab","ba"]
+
+**题解**：
+
+1、回溯法
+
+```Java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+public class Solution {
+    public ArrayList<String> Permutation(String str) {
+        ArrayList<String> list = new ArrayList<>();
+        if(str != null && str.length()>0){
+            Permutation(str.toCharArray(),0,list);
+            Collections.sort(list); 
+        }
+        return list;
+    }
+    
+    private void Permutation(char[] chars, int i, ArrayList<String> list){
+        if(i == chars.length-1)
+            list.add(String.valueOf(chars));
+        else{
+            HashSet<Character> charSet = new HashSet<Character>();
+            for(int j = i; j<chars.length; j++){
+                if(j==i || !charSet.contains(chars[j])){
+                    charSet.add(chars[j]);
+                    swap(chars, i,j);
+                    Permutation(chars,i+1,list);
+                    swap(chars,j,i);
+                }
+            }
+        }
+    }
+    
+    private void swap(char[] cs, int i, int j){
+        char temp = cs[i];
+        cs[i] = cs[j];
+        cs[j] = temp;
+    }
+}
+```
+
+## JZ30、连续子数组的最大值
+
+输入一个整型数组，数组里有正数也有负数。数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。要求时间复杂度为 O(n)。
+
+**示例**：
+
+>输入：[1,-2,3,10,-4,7,2,-5]
+>
+>返回值：18
+>
+>说明：输入的数组为{1,-2,3,10,-4,7,2,-5}，和最大的子数组为{3,10,-4,7,2}，因此输出为该子数组的和 18。 
+
+**题解**：
+
+1、动态规划
+
+比较当前 array[index] 与 array[index] + max 的大小，前者大则舍弃后者，后者大则说明前者也在最大连续子数列中
+
+```Java
+public class Solution {
+    public int FindGreatestSumOfSubArray(int[] array) {
+        int max = array[0];
+        int res = array[0];
+        for (int i = 1; i < array.length; i++){
+            max = Math.max(array[i], max+array[i]);
+            res = Math.max(res, max);
+        }
+        return res;
+    }   
+}
+```
+
+## JZ33、丑数
+
+把只包含质因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含质因子7。 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
+
+**示例：**
+
+> 输入：7
+>
+> 返回值：8
+
+**题解**：
+
+要求的是第几个丑数，不是有几个。
+
+```Java
+import java.util.ArrayList;
+
+public class Solution {
+    public int GetUglyNumber_Solution(int index) {
+        if(index < 7)
+            return index;
+        int p2 = 0, p3 = 0, p5 = 0, num = 1;
+        ArrayList<Integer> arr = new ArrayList<>();
+        arr.add(num);
+        while(arr.size()<index){ 
+            num = Math.min(arr.get(p2)*2,Math.min(arr.get(p3)*3,arr.get(p5)*5));
+            if(arr.get(p2)*2 == num)
+                p2++;
+            if(arr.get(p3)*3 == num)
+                p3++;
+            if(arr.get(p5)*5 == num)
+                p5++;
+            arr.add(num);
+        }
+        return num;
+    }
+}
+```
+
