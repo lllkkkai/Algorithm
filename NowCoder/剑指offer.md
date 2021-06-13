@@ -775,3 +775,108 @@ public class Solution {
 }
 ```
 
+## JZ37、数字在升序数组中出现的次数
+
+统计一个数字在升序数组中出现的次数。
+
+**示例：**
+
+>输入：[1,2,3,3,3,3,4,5],3
+>
+>返回值：4
+
+**题解：**
+
+1、二分法
+
+
+
+```Java
+public class Solution {
+    public int GetNumberOfK(int [] array , int k) {
+        if(array.length == 0 || k<array[0] || k>array[array.length-1])
+            return 0;
+        int len = array.length;
+        int left = 0;
+        int right = array.length-1;
+        int mid = (left+right)/2;
+        int count = 0;
+        int found = 0;
+        while(left<=right){
+            if(array[mid] < k)
+                left = mid+1;
+            else if(array[mid] >k)
+                right = mid-1;
+            else{
+                count++;
+                found = mid;
+                break;
+            }
+            mid = (left+right)/2;
+        }
+        int prev = mid-1;
+        int foll = mid+1;
+        while(prev>=left){
+            if(array[prev] == k){
+                count++;
+                prev--;
+            }
+            else
+                break;
+        }
+        while(foll<=right){
+            if(array[foll] == k){
+                count++;
+                foll++;
+            }
+            else
+                break;
+        }
+        return count;
+    }
+    
+}
+```
+
+## JZ39、平衡二叉树
+
+输入一棵二叉树，判断该二叉树是否是平衡二叉树。
+
+在这里，我们只需要考虑其平衡性，不需要考虑其是不是排序二叉树。
+
+**平衡二叉树**（Balanced Binary Tree），具有以下性质：它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
+
+注：我们约定空树是平衡二叉树。
+
+**示例：**
+
+> 输入：{1，2，3，4，5，6，7}
+>
+> 返回值：true
+
+**题解：**
+
+递归计算左右子树的深度即可
+
+```Java
+public class Solution {
+    public boolean IsBalanced_Solution(TreeNode root) {
+        if(root == null)
+            return true;
+        
+        int delta = Height(root.left)-Height(root.right);
+        if( ((delta<0)?-delta:delta) <= 1 )
+            return true;
+        else
+            return false;
+    }
+    
+    private int Height(TreeNode root) {
+        if(root == null)
+            return 0;
+        else 
+            return Math.max(Height(root.left)+1,Height(root.right)+1);
+    }
+}
+```
+
