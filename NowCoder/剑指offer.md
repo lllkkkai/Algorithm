@@ -880,3 +880,157 @@ public class Solution {
 }
 ```
 
+## JZ55、链表中环的入口结点
+
+给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。
+
+**题解：**
+
+1、快慢指针
+
+简单的数学证明，假设走了n步后快慢指针相遇，此时，慢走n步，快走2n步，因为相遇，所以
+
+```Java
+/*
+ public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+*/
+public class Solution {
+
+    public ListNode EntryNodeOfLoop(ListNode pHead) {
+        ListNode slow = pHead;
+        ListNode fast = pHead;
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+            //当快指针 与 慢指针相遇时
+            if(fast == slow){
+                fast = pHead;
+                //再次相遇
+                while(fast != slow){
+                    fast = fast.next;
+                    slow = slow.next;
+                }
+                return fast;
+            }
+        }
+        return null;
+    }
+}
+```
+
+## JZ58、对称的二叉树
+
+请实现一个函数，用来判断一棵二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。
+
+**示例1**
+
+>  输入：{8,6,6,5,7,7,5}
+>
+> 返回值：true
+
+**示例2**
+
+> 输入：{8,6,9,5,7,7,5}
+>
+> 返回值：false
+
+**题解：**
+
+1、递归
+
+```Java
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    boolean isSymmetrical(TreeNode pRoot) {
+        if(pRoot == null)
+            return true;
+        return isIt(pRoot.left, pRoot.right);
+    }
+    
+    boolean isIt(TreeNode pLeft, TreeNode pRight){
+        if(pLeft == null && pRight == null)
+            return true;
+        else if(pLeft == null && pRight != null)
+            return false;
+        else if(pLeft != null && pRight == null)
+            return false;
+        else{
+            if(pLeft.val != pRight.val)
+                return false;
+            return isIt(pLeft.right,pRight.left) && isIt(pLeft.left,pRight.right);
+        }
+
+        
+    }
+}
+```
+
+## JZ62、二叉搜索树的第k个结点
+
+给定一棵二叉搜索树，请找出其中的第k小的TreeNode结点。
+
+**示例1**
+
+> 输入：{5,3,7,2,4,6,8},3
+>
+> 返回值：{4}
+>
+> 说明：按结点数值大小顺序第三小结点的值为4  
+
+**题解：**
+
+1、经典递归
+
+```Java
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    private TreeNode res;
+    private int cnt = 0;
+    TreeNode KthNode(TreeNode pRoot, int k) {
+        inOrder(pRoot, k);
+        return res;
+    }
+    
+    void inOrder(TreeNode pRoot, int k){
+        if (pRoot == null || cnt >= k)
+            return ;
+        inOrder(pRoot.left, k);
+        cnt++;
+        if(cnt == k)
+            res = pRoot;
+        inOrder(pRoot.right, k);
+    }
+}
+```
+
