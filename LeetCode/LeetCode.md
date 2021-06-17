@@ -310,3 +310,252 @@ class Solution {
 }
 ```
 
+## [16. 最接近的三数之和](https://leetcode-cn.com/problems/3sum-closest/)
+
+给定一个包括 n 个整数的数组 nums 和 一个目标值 target。找出 nums 中的三个整数，使得它们的和与 target 最接近。返回这三个数的和。假定每组输入只存在唯一答案。
+
+**示例：**
+
+> 输入：nums = [-1,2,1,-4], target = 1
+> 输出：2
+> 解释：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) .
+
+**题解：**
+
+此题为字节教育一面题
+
+将数组排序后，先选中第 i 个数，（相当于成了两数之和）然后选后面一位和最后一位，保证所有可能即可
+
+```Java
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int close = nums[0]+nums[1]+nums[2];
+        for(int i = 0; i<nums.length-2; i++){
+            int left = i+1, right = nums.length-1;
+            while(left<right){
+                int three = nums[i]+nums[left]+nums[right];
+                if(Math.abs(three-target)<Math.abs(close-target)){
+                    close = three;
+                }
+                if(three>target){
+                    right--;
+                }
+                else if(three<target){
+                    left++;
+                }
+                else{
+                    return target;
+                }
+            }
+        }
+        return close;
+    }
+}
+```
+
+## [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
+
+给定一个字符串，请你找出其中不含有重复字符的**最长子串**的长度。
+
+**示例1：** 
+
+> 输入: s = "abcabcbb"
+> 输出: 3 
+> 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+
+**示例2：**
+
+> 输入: s = "bbbbb"
+> 输出: 1
+> 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+
+**示例3:**
+
+> 输入: s = "pwwkew"
+> 输出: 3
+> 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+>      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+
+**示例4:**
+
+> 输入: s = ""
+>
+> 输出: 
+
+**题解：**
+
+滑动窗口思想，简单易懂
+
+```Java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if(s.length() == 0){
+            return 0;
+        }
+
+        Set<Character> set = new HashSet<>();
+        int left = 0;
+        int right = 0;
+        int length = 0;
+        while( right<s.length()){
+            if(set.contains(s.charAt(right))){
+                set.remove(s.charAt(left++));
+            }else{
+                set.add(s.charAt(right++));
+            }
+            length = set.size()>length ? set.size():length;
+        }
+        return length;
+    }
+}
+```
+
+## [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+
+给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+
+如果数组中不存在目标值 target，返回 [-1, -1]。
+
+进阶：
+
+你可以设计并实现时间复杂度为 O(log n) 的算法解决此问题吗？
+
+**示例** 1：
+
+> 输入：nums = [5,7,7,8,8,10], target = 8
+> 输出：[3,4]
+
+**示例** 2：
+
+> 输入：nums = [5,7,7,8,8,10], target = 6
+> 输出：[-1,-1]
+
+**示例** 3：
+
+> 输入：nums = [], target = 0
+> 输出：[-1,-1]
+
+**题解**：
+
+经典二分
+
+```Java
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int[] a = {-1,-1};
+        if(nums.length == 0)
+            return a;
+        if(nums.length == 1){
+            if(target == nums[0]){
+                a[0] = 0;
+                a[1] = 0;
+            }
+            return a;
+        }
+        int left = 0;
+        int right = nums.length-1;
+        int mid = left+(right-left)/2;
+        int count = 0;
+        boolean flag = false;
+        while(flag == false){
+             while(left<=right){
+                 mid = left+(right-left)/2;
+                 if(target>nums[mid]){
+                     left = mid+1;
+                 }
+                 if(target<nums[mid]){
+                     right = mid-1;
+                 }
+                 if(target == nums[mid]){
+                     flag = true;
+                     break;
+                 }
+            }
+            if(flag == false){
+                break;
+            }
+            else{
+                left = mid;
+                right = mid;
+                while(nums[left] == target && left>=0){
+                    left--;
+                    if(left == -1)
+                        break;
+                }
+                while(nums[right] == target && right<=nums.length-1){
+                    right++;
+                    if(right == nums.length)
+                        break;
+                }
+                a[0] = left+1;
+                a[1] = right-1;
+            }
+        }
+        return a;
+    }
+}
+```
+
+## [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
+
+给定一个非负整数数组 nums ，你最初位于数组的 **第一个下标** 。
+
+数组中的每个元素代表你在该位置可以跳跃的最大长度。
+
+判断你是否能够到达最后一个下标。 
+
+**示例** 1：
+
+> 输入：nums = [2,3,1,1,4]
+> 输出：true
+> 解释：可以先跳 1 步，从下标 0 到达下标 1, 然后再从下标 1 跳 3 步到达最后一个下标。
+
+**示例** 2：
+
+> 输入：nums = [3,2,1,0,4]
+> 输出：false
+> 解释：无论怎样，总会到达下标为 3 的位置。但该下标的最大跳跃长度是 0 ， 所以永远不可能到达最后一个下标。
+
+**题解：**
+
+意思是每个格子决定当前可以走的步数上限，为0必然会停止不动
+
+以 [2,3,1,1,4] 为例，max=2，表示我们可以走2、1、0步，即走i<=2的步数
+
+i = 1
+
+i<=max == 2
+
+max = 2 ? 3 + 1 = 4
+
+i = 2
+
+i<=max == 4
+
+max = 4?1+2 = 4
+
+i = 3
+
+i<= max ==4
+
+  
+
+```Java
+class Solution {
+    public boolean canJump(int[] nums) {
+        if(nums.length <= 1)
+            return true;
+        int max = nums[0];
+        for(int i = 1; i<nums.length-1; i++){
+            if(i<=max){
+                max = Math.max(max, nums[i] + i);
+            }
+        }
+        return max>=nums.length-1;
+    }
+}
+```
+
+
+
