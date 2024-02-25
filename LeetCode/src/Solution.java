@@ -34,10 +34,36 @@ class Solution {
     }
 
     public static void main(String[] args) {
-        int nums[] = new int[]{1,2,3};
-        subsets(nums);
-        System.out.println(res);
+        int nums[] = new int[]{2,1,1,1,1};
+//        subsets(nums);
+        System.out.println(jump(nums));
     }
 
+    public static int jump(int[] nums) {
+        // 0 1 2 3 4 5 6
+        // 3 4 3 2 5 4 3
+        // 1 1 1 1 2 2 2
+        int len = nums.length;
+        int[] dp = new int[len];
+        dp[0] = 1;
+        int seconde = 0;
+        int sum = nums[0];
+        if (len == 1) {
+            if (nums[0] == 1 || nums[0] == 0)
+                return 0;
+            return 1;
+        }
+        for (int i = 1; i < len; i++) {
+            seconde = Math.max(nums[i-1], seconde);
+            if (sum >= i) {
+                dp[i] = dp[i - 1];
+            } else {
+                dp[i] = dp[i - 1] + 1;
+                sum = sum + seconde;
+                seconde = 0;
+            }
+        }
+        return dp[len - 1];
+    }
 
 }
