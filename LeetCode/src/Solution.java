@@ -34,12 +34,21 @@ class Solution {
     }
 
     public static void main(String[] args) {
-        int nums[] = new int[]{1,1,3,1,1};
+        int nums[] = new int[]{-1,-2};
         Solution solution = new Solution();
-        System.out.println(solution.jump(nums));
+        System.out.println(solution.maxSubArray(nums));
     }
 
-    public int jump(int[] nums) {
-
+    public int maxSubArray(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        int res = nums[0];
+        if(nums.length == 1)
+            return nums[0];
+        for(int i = 1; i<nums.length;i++){
+            dp[i] = Math.max(nums[i], dp[i-1]+nums[i]);
+            res = Math.max(dp[i], res);
+        }
+        return res;
     }
 }
