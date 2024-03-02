@@ -33,12 +33,6 @@ class Solution {
         }
     }
 
-    public static void main(String[] args) {
-        int nums[] = new int[]{-1,-2};
-        Solution solution = new Solution();
-        System.out.println(solution.maxSubArray(nums));
-    }
-
     public int maxSubArray(int[] nums) {
         int[] dp = new int[nums.length];
         dp[0] = nums[0];
@@ -50,5 +44,51 @@ class Solution {
             res = Math.max(dp[i], res);
         }
         return res;
+    }
+
+    public static void main(String[] args) {
+//        int nums[] = new int[]{-1,-2};
+        ListNode node = new ListNode(1);
+        ListNode start = node;
+        for(int i =2;i<=5;i++){
+            node.next = new ListNode(i);
+            node = node.next;
+        }
+        Solution solution = new Solution();
+        System.out.println(solution.reverseBetween(start,2,4));
+    }
+
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        ListNode res = head;
+        ListNode last = head;
+        if (head == null)
+            return head;
+        int count = 1;
+        while (count != left) {
+            last = head;
+            head = head.next;
+            count++;
+        }
+        //
+        ListNode head2 = head;
+        while (count != right) {
+            head2 = head2.next;
+            count++;
+        }
+        ListNode a = head;
+        a = reverse(last, head, head2);
+        return res;
+    }
+
+    public ListNode reverse(ListNode last, ListNode left, ListNode right) {
+        ListNode pre = last;
+        ListNode cur = left;
+        while (cur != right) {
+            ListNode next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
     }
 }
