@@ -37,10 +37,10 @@ class Solution {
         int[] dp = new int[nums.length];
         dp[0] = nums[0];
         int res = nums[0];
-        if(nums.length == 1)
+        if (nums.length == 1)
             return nums[0];
-        for(int i = 1; i<nums.length;i++){
-            dp[i] = Math.max(nums[i], dp[i-1]+nums[i]);
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = Math.max(nums[i], dp[i - 1] + nums[i]);
             res = Math.max(dp[i], res);
         }
         return res;
@@ -50,12 +50,12 @@ class Solution {
 //        int nums[] = new int[]{-1,-2};
         ListNode node = new ListNode(1);
         ListNode start = node;
-        for(int i =2;i<=5;i++){
+        for (int i = 2; i <= 5; i++) {
             node.next = new ListNode(i);
             node = node.next;
         }
         Solution solution = new Solution();
-        System.out.println(solution.reverseBetween(start,2,4));
+        System.out.println(solution.searchRange(new int[]{1,3}, 1));
     }
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
@@ -90,5 +90,49 @@ class Solution {
             cur = next;
         }
         return pre;
+    }
+
+    public int[] searchRange(int[] nums, int target) {
+        int len = nums.length;
+        int l = 0;
+        int r = len - 1;
+        int mid = l + (r - l) / 2;
+        while (l <= r) {
+            if (nums[mid] == target) {
+                return func(nums, mid);
+            } else if (nums[mid] > target) {
+                r = mid - 1;
+                mid = l + (r - l) / 2;
+            } else {
+                l = mid + 1;
+                mid = l + (r - l) / 2;
+            }
+        }
+        return new int[]{-1, -1};
+    }
+
+    public int[] func(int[] nums, int i) {
+        int[] res = new int[2];
+        int len = nums.length;
+        boolean flag = true;
+        int left = i - 1;
+        int right = i + 1;
+        while ((left >= 0 || right < len)) {
+            if (nums[right] == nums[i] && right < len) {
+                right++;
+            }
+            if (left >= 0 && nums[left] == nums[i]) {
+                left--;
+            }
+            if (left < 0 && right == len) {
+                break;
+            }
+            if (left >= 0 && nums[left] != nums[i] && nums[right] != nums[i]) {
+                break;
+            }
+        }
+        res[0] = left + 1;
+        res[1] = right - 1;
+        return res;
     }
 }
