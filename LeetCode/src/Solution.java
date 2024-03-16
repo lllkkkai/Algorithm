@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class Solution {
+public class Solution {
     //    public List<List<Integer>> subsets(int[] nums) {
 //        List<List<Integer>> output = new ArrayList();
 //        output.add(new ArrayList<Integer>());
@@ -48,14 +48,13 @@ class Solution {
 
     public static void main(String[] args) {
 //        int nums[] = new int[]{-1,-2};
-        ListNode node = new ListNode(1);
-        ListNode start = node;
-        for (int i = 2; i <= 5; i++) {
-            node.next = new ListNode(i);
-            node = node.next;
-        }
+//        ListNode node = new ListNode(1);
+//        ListNode start = node;
+//        for (int i = 2; i <= 5; i++) {
+//            node.next = new ListNode(i);
+//            node = node.next;
         Solution solution = new Solution();
-        System.out.println(solution.searchRange(new int[]{1,3}, 1));
+        solution.searchRange(new int[]{1,3},1);
     }
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
