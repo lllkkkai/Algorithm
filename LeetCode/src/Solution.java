@@ -54,7 +54,7 @@ public class Solution {
 //            node.next = new ListNode(i);
 //            node = node.next;
         Solution solution = new Solution();
-        solution.searchRange(new int[]{1,3},1);
+        solution.rob(new int[]{1,1,1,1});
     }
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
@@ -133,5 +133,46 @@ public class Solution {
         res[0] = left + 1;
         res[1] = right - 1;
         return res;
+    }
+
+    public int rob(int[] nums) {
+        // 1 2 3 1 9
+        // 1 2 4 4 13
+        // 1 1 1 0 1
+        if(nums.length == 1){
+            return nums[0];
+        }
+        int[][] dp = new int[nums.length+1][2];
+        dp[0][0] = nums[0];
+        dp[0][1] = 1;
+        if(nums[1] > nums[0]){
+            dp[1][0] = nums[1];
+            dp[1][1] = 1;
+        } else {
+            dp[1][0] = dp[0][0];
+            dp[1][1] = 0;
+        }
+        //
+        for(int i = 2; i<nums.length; i++){
+            if(dp[i-1][1] == 1 && dp[i-2][1] == 1){
+                if(dp[i-2][0] + nums[i] > dp[i-1][0]){
+                    dp[i][0] = dp[i-2][0] + nums[i];
+                    dp[i][1] = 1;
+                } else{
+                    dp[i][0] = dp[i-1][0];
+                    dp[i][1] = 0;
+                }
+            }
+            if(dp[i-1][1] == 0 && dp[i-2][1] == 1){
+                if(dp[i-2][0] + nums[i] > dp[i-1][0]){
+                    dp[i][0] = dp[i-2][0] + nums[i];
+                    dp[i][1] = 1;
+                } else{
+                    dp[i][0] = dp[i-1][0];
+                    dp[i][1] = 0;
+                }
+            }
+        }
+        return dp[nums.length-1][0];
     }
 }
