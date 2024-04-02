@@ -19,19 +19,19 @@ public class Solution {
     static List<List<Integer>> res = new ArrayList();
     static ArrayList<Integer> path = new ArrayList();
 
-    public static List<List<Integer>> subsets(int[] nums) {
-        backTrace(nums, 0);
-        return res;
-    }
+//    public static List<List<Integer>> subsets(int[] nums) {
+//        backTrace(nums, 0);
+//        return res;
+//    }
 
-    public static void backTrace(int[] nums, int index) {
-        res.add(new ArrayList<>(path));
-        for (int i = index; i < nums.length; i++) {
-            path.add(nums[index]);
-            backTrace(nums, i + 1);
-            path.removeLast();
-        }
-    }
+//    public static void backTrace(int[] nums, int index) {
+//        res.add(new ArrayList<>(path));
+//        for (int i = index; i < nums.length; i++) {
+//            path.add(nums[index]);
+//            backTrace(nums, i + 1);
+//            path.removeLast();
+//        }
+//    }
 
     public int maxSubArray(int[] nums) {
         int[] dp = new int[nums.length];
@@ -54,7 +54,21 @@ public class Solution {
 //            node.next = new ListNode(i);
 //            node = node.next;
         Solution solution = new Solution();
-        solution.rob(new int[]{1,1,1,1});
+        System.out.println(solution.uniquePaths(51,9));
+    }
+
+    public int uniquePaths(int m, int n) {
+        // f(3,2) = f(3,1) + f(2,2)
+        // f(3,1) = f(2,1)
+        // f(2,2) = f(2,1) + f(1,2)
+        // f(2,1) = 1
+        // f(1,1) = 1
+        // f(x,1) = 1
+        // f(1,x) = 1
+        if(m == 1 || n == 1){
+            return 1;
+        }
+        return uniquePaths(m-1, n)+uniquePaths(m,n-1);
     }
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
