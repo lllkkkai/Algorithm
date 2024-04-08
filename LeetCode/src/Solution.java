@@ -54,7 +54,7 @@ public class Solution {
 //            node.next = new ListNode(i);
 //            node = node.next;
         Solution solution = new Solution();
-        System.out.println(solution.uniquePaths(51,9));
+        System.out.println(solution.strStr("leetcode", "leeto"));
     }
 
     public int uniquePaths(int m, int n) {
@@ -65,10 +65,10 @@ public class Solution {
         // f(1,1) = 1
         // f(x,1) = 1
         // f(1,x) = 1
-        if(m == 1 || n == 1){
+        if (m == 1 || n == 1) {
             return 1;
         }
-        return uniquePaths(m-1, n)+uniquePaths(m,n-1);
+        return uniquePaths(m - 1, n) + uniquePaths(m, n - 1);
     }
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
@@ -153,13 +153,13 @@ public class Solution {
         // 1 2 3 1 9
         // 1 2 4 4 13
         // 1 1 1 0 1
-        if(nums.length == 1){
+        if (nums.length == 1) {
             return nums[0];
         }
-        int[][] dp = new int[nums.length+1][2];
+        int[][] dp = new int[nums.length + 1][2];
         dp[0][0] = nums[0];
         dp[0][1] = 1;
-        if(nums[1] > nums[0]){
+        if (nums[1] > nums[0]) {
             dp[1][0] = nums[1];
             dp[1][1] = 1;
         } else {
@@ -167,26 +167,52 @@ public class Solution {
             dp[1][1] = 0;
         }
         //
-        for(int i = 2; i<nums.length; i++){
-            if(dp[i-1][1] == 1 && dp[i-2][1] == 1){
-                if(dp[i-2][0] + nums[i] > dp[i-1][0]){
-                    dp[i][0] = dp[i-2][0] + nums[i];
+        for (int i = 2; i < nums.length; i++) {
+            if (dp[i - 1][1] == 1 && dp[i - 2][1] == 1) {
+                if (dp[i - 2][0] + nums[i] > dp[i - 1][0]) {
+                    dp[i][0] = dp[i - 2][0] + nums[i];
                     dp[i][1] = 1;
-                } else{
-                    dp[i][0] = dp[i-1][0];
+                } else {
+                    dp[i][0] = dp[i - 1][0];
                     dp[i][1] = 0;
                 }
             }
-            if(dp[i-1][1] == 0 && dp[i-2][1] == 1){
-                if(dp[i-2][0] + nums[i] > dp[i-1][0]){
-                    dp[i][0] = dp[i-2][0] + nums[i];
+            if (dp[i - 1][1] == 0 && dp[i - 2][1] == 1) {
+                if (dp[i - 2][0] + nums[i] > dp[i - 1][0]) {
+                    dp[i][0] = dp[i - 2][0] + nums[i];
                     dp[i][1] = 1;
-                } else{
-                    dp[i][0] = dp[i-1][0];
+                } else {
+                    dp[i][0] = dp[i - 1][0];
                     dp[i][1] = 0;
                 }
             }
         }
-        return dp[nums.length-1][0];
+        return dp[nums.length - 1][0];
+    }
+
+    public int strStr(String haystack, String needle) {
+        int index = 0;
+        int len = needle.length();
+        int res = -1;
+        for (int i = 0; i < haystack.length(); i++) {
+            if (index == len) {
+                break;
+            }
+            if (haystack.charAt(i) == needle.charAt(index)) {
+                if (res == -1) {
+                    res = i;
+                }
+                index++;
+            } else {
+                i = res + 1;
+                res = -1;
+                index = 0;
+            }
+        }
+        //
+        if (index < len) {
+            return -1;
+        }
+        return res;
     }
 }
