@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Solution {
     //    public List<List<Integer>> subsets(int[] nums) {
@@ -54,7 +56,28 @@ public class Solution {
 //            node.next = new ListNode(i);
 //            node = node.next;
         Solution solution = new Solution();
-        System.out.println(solution.strStr("leetcode", "leeto"));
+        int nums[] = new int[]{4,3,2,7,8,2,3,1};
+        System.out.println(solution.findDuplicates(nums));
+    }
+
+    public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> res = new ArrayList();
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i = 0;i<nums.length;i++){
+            if(map.containsKey(nums[i])){
+                int count = map.get(nums[i]);
+                count++;
+                map.put(nums[i], count);
+            } else{
+                map.put(nums[i], 1);
+            }
+        }
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()){
+            if(entry.getValue()>1){
+                res.add(entry.getKey());
+            }
+        }
+        return res;
     }
 
     public int uniquePaths(int m, int n) {
